@@ -6,15 +6,13 @@ import addkey from "./routes/addService.js";
 
 const app = new Hono();
 
-// app.use("*", cors({
-//     origin: [
-//         "https://keevlt.pages.dev",
-//         "http://localhost:5501"
-//     ],
-//     allowMethods: ["GET", "POST", "PUT", "DELETE"]
-// }));
+app.use("*", cors({
+    origin: [
+        "https://keevlt.pages.dev",
+    ],
+    allowMethods: ["GET", "POST", "PUT", "DELETE"]
+}));
 
-app.use("*", cors());
 app.use("*", authMiddleware);
 
 app.route("/api", addkey);
