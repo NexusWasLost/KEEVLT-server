@@ -18,23 +18,35 @@ addkey.post("/add-key", async function(c){
         const sql = neon(c.env.DATABASE_URL);
 
         //create key hint
-        const key_hint = createKeyHint(apiKeyValue);
+        const keyHint = createKeyHint(apiKeyValue);
         //encrypt key before insert
         const encryptedAPIKeyValue = await encryptKey(c, apiKeyValue);
 
         //insert user data
         await sql.query(`
             INSERT INTO users(user_id, user_email)
-            VALUES('${meta.uid}', '${meta.email || null}')
-            ON CONFLICT (user_id) DO NOTHING;
-        `);
+            VALUES($1, $2)
+            ON CONFLICT (user_id) DO NOTHING;`,
+            [meta.uid, (meta.email || null)]
+        );
         //insert api key data
-        await sql.query(`
+        const data = await sql.query(`
             INSERT INTO api_keys(user_id, key_name, encrypted_key, key_hint, service_name)
-            VALUES('${meta.uid}', '${apiKeyName}', '${encryptedAPIKeyValue}', '${key_hint}', '${serviceName}');
-        `);
+            VALUES($1, $2, $3, $4, $5)
+            RETURNING key_id;`,
+            [meta.uid, apiKeyName, encryptedAPIKeyValue, keyHint, serviceName]
+        );
 
-        return c.json({message: "Message Got"}, 200);
+        return c.json({
+            message: "Key Added Successfully",
+            data: {
+                key_id: data[0].key_id,
+                key_name: apiKeyName,
+                key_hint: keyHint,
+                e_apikey: encryptedAPIKeyValue,
+                service_name: serviceName
+            }
+        }, 200);
     }
     catch(error){
         console.log(error);
