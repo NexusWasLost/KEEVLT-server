@@ -8,13 +8,14 @@ import getkey from "./routes/get-key.js";
 
 const app = new Hono();
 app.onError(errorHandler);
-// app.use("*", cors({
-//     origin: [
-//         "https://keevlt.pages.dev",
-//         "http://localhost:5501"
-//     ],
-//     allowMethods: ["GET", "POST", "PUT", "DELETE"]
-// }));
+
+app.use("*", cors({
+    origin: [
+        "https://keevlt.pages.dev",
+        "http://localhost:5501"
+    ],
+    allowMethods: ["GET", "POST", "PUT", "DELETE"]
+}));
 
 app.use("*", authMiddleware);
 
