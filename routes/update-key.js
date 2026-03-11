@@ -4,7 +4,7 @@ import { HTTPException } from "hono/http-exception";
 
 const updatekey = new Hono();
 
-updatekey.patch("/api/update-key/:key_id", async function (c) {
+updatekey.patch("/update-key/:key_id", async function (c) {
     const keyId = c.req.param("key_id");
     if (!keyId)
         throw new HTTPException(400, { message: "Key Id not provided" });
