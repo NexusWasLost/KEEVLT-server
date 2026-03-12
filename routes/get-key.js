@@ -74,7 +74,7 @@ getkey.get("/list-keys", async function (c) {
         throw new HTTPException(404, { message: "No Keys Found" });
 
     //cache the data
-    await c.env.API_CACHE.put(`keys:${id}`, JSON.stringify(data), { expirationTtl: 480 });
+    await c.env.API_CACHE.put(`keys:${id}`, JSON.stringify(data), { expirationTtl: 86400 });
 
     return c.json({
         success: true,
