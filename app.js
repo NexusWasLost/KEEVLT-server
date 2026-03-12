@@ -16,7 +16,8 @@ app.use("*", cors({
     origin: [
         "https://cyphr.pages.dev"
     ],
-    allowMethods: ["GET", "POST", "PATCH","DELETE"]
+    allowMethods: ["GET", "POST", "PATCH","DELETE"],
+    maxAge: 600
 }));
 
 app.use("*", authMiddleware);
